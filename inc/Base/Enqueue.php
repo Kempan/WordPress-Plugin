@@ -13,7 +13,7 @@ class Enqueue extends BaseController{
   
   // Enqueue your styles and scripts
   public function enqueue(){
-    wp_enqueue_style('plugin-style', $this->plugin_url . 'assets/style.css', __FILE__);
-    wp_enqueue_script('plugin-script', $this->plugin_url . 'assets/style.css', __FILE__);
+    wp_enqueue_style('predator-style', $this->plugin_url . '/assets/style.css', __FILE__);
+    wp_enqueue_script('predator-script', $this->plugin_url . '/assets/script.js', __FILE__);
   }
 }

@@ -1,8 +1,8 @@
 <?php
 
 /*
-Plugin Name: Demo Plugin
-Description: Demo PLugin
+Plugin Name: PredatorPlugin
+Description: Awesome plugin for predators.
 Version: 1.0.0
 Author: PredatorJocke
 */
@@ -26,18 +26,18 @@ define('PLUGIN_URL', plugin_dir_url(__FILE__));
 define('PLUGIN', plugin_basename(__FILE__));
 
 // Activate touch
-function activate_demo_plugin(){
+function activate_predator_plugin(){
   Inc\Base\Activate::activate();
 }
-register_activation_hook(__FILE__, 'activate_demo_plugin');
+register_activation_hook(__FILE__, 'activate_predator_plugin');
 
 // Deactivate touch
-function deactivate_demo_plugin(){
+function deactivate_predator_plugin(){
   Inc\Base\Deactivate::deactivate();
 }
-register_deactivation_hook(__FILE__, 'deactivate_demo_plugin');
+register_deactivation_hook(__FILE__, 'deactivate_predator_plugin');
 
-// Check for Init class and initialize register_services() if found
+// Check for Init class and initialize it's register_services() if found
 if(class_exists('Inc\\Init')){
   Inc\Init::register_services();
 }

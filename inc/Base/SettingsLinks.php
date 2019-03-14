@@ -13,7 +13,7 @@ class SettingsLinks extends BaseController{
 
   // Creating settings link for plugin form
   public function settings_link($links){
-    $settings_link = '<a href="admin.php?page=demo_plugin">Settings</a>';
+    $settings_link = '<a href="admin.php?page=predator_plugin">Settings</a>';
     array_push($links, $settings_link);
     return $links;
   }

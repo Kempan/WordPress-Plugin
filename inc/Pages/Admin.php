@@ -2,13 +2,23 @@
 
 namespace Inc\Pages;
 
-use \Inc\Base\BaseController;
 use \Inc\Api\SettingsApi;
+use \Inc\Base\BaseController;
+use \Inc\Api\Callbacks\AdminCallbacks;
+use \Inc\Api\Callbacks\ManagerCallbacks;
 
 class Admin extends BaseController{
 
-  // Instance of SettingsApi, declared register();
+  // ---------- CLASS DECLARATIONS ----------
+
+  // Instance of SettingsApi, declared in register();
   public $settings;
+  // Instance of AdminCallbacks, declared in register();
+  public $callbacks;
+  // Instance of ManagerCallbacks, declared in register();
+  public $callbacks_manager;
+
+  // ---------- ADMIN PAGES DECLARATIONS ----------
   // The admin pages you want to generate, declared in setPages();
   public $pages = array();
   // The admin subpages you want to generate, declared in setSubPages();
@@ -17,11 +27,22 @@ class Admin extends BaseController{
   
   public function register(){
 
-    // SettingsApi is a class that dynamicly creates admin pages and sub pages from the $pages/$subpages.
-    // So first I create a new instance of SettingsApi and store it in $settings
+    // SettingsApi contains functions that creates admin pages and sub pages from the $pages/$subpages.
+    // Update: It now also creates custom admin sections and fields
     $this->settings = new SettingsApi();
 
-    // Now I set my admin pages and admin sub pages with these functions
+    // AdminCallbacks contains callback functions for the admin templates
+    $this->callbacks = new AdminCallbacks();
+
+    // ManagerCallbacks contains functions to print the diffrent option checkboxes
+    $this->callbacks_manager = new ManagerCallbacks();
+
+    // I set my custom admin fields with these functions
+    $this->setSettings();
+    $this->setSections();
+    $this->setFields();
+
+    // I set my admin pages and admin sub pages with these functions
     $this->setPages();
     $this->setSubPages();
 
@@ -29,18 +50,18 @@ class Admin extends BaseController{
     $this->settings->addPages($this->pages)->withSubPage('Dashboard')->addSubPages($this->subpages)->register();
   }
 
-  // I'am using these functions to set pages because I want
+  // I was using the construct first but rebuilt using these functions to set pages because I want
   // to leave the construct untouched for BaseController plugin_path access
   public function setPages(){
 
     // Create your admin pages here
     $this->pages = [
       [
-        'page_title' => 'Demo-plugin',
-        'menu_title' => 'DemoPlugin',
+        'page_title' => 'Predator Plugin',
+        'menu_title' => 'PredatorPlugin',
         'capability' => 'manage_options',
-        'menu_slug' => 'demo_plugin',
-        'callback' => function(){ return require_once("$this->plugin_path/templates/admin-index.php"); },
+        'menu_slug' => 'predator_plugin',
+        'callback' => array($this->callbacks, 'adminDashboard'),
         'icon_url' => 'dashicons-admin-generic',
         'position' => 110
       ]
@@ -54,45 +75,171 @@ class Admin extends BaseController{
     // Create your admin sub pages here
     $this->subpages = [
       [
-        'parent_slug' => 'demo_plugin',
+        'parent_slug' => 'predator_plugin',
         'page_title' => 'Custom Post Types',
         'menu_title' => 'CPT',
         'capability' => 'manage_options',
-        'menu_slug' => 'demo_cpt',
-        'callback' => function(){echo '<h1>CPT Options</h1>';},
+        'menu_slug' => 'predator_cpt',
+        'callback' => array($this->callbacks, 'cptDashboard'),
       ],
       [
-        'parent_slug' => 'demo_plugin',
+        'parent_slug' => 'predator_plugin',
         'page_title' => 'Custom Taxonomies',
         'menu_title' => 'Taxonomies',
         'capability' => 'manage_options',
-        'menu_slug' => 'demo_taxonomies',
-        'callback' => function(){echo '<h1>Taxonomies Options</h1>';},
+        'menu_slug' => 'predator_taxonomies',
+        'callback' => array($this->callbacks, 'taxonomiesDashboard'),
       ],
       [
-        'parent_slug' => 'demo_plugin',
+        'parent_slug' => 'predator_plugin',
         'page_title' => 'Custom Widgets',
         'menu_title' => 'Widgets',
         'capability' => 'manage_options',
-        'menu_slug' => 'demo_widgets',
-        'callback' => function(){echo '<h1>Widgets Options</h1>';},
+        'menu_slug' => 'predator_widgets',
+        'callback' => array($this->callbacks, 'widgetsDashboard'),
       ],
     ];
   }
 
-  // Other way to add admin pages below --
 
-  // Adding the plugin admin page in menu
-    // add_action('admin_menu', array($this, 'add_admin_pages'));
 
-  // Creating the admin page
-    // public function add_admin_pages(){
-    //   add_menu_page('Demo-plugin', 'DemoPlugin', 'manage_options', 'demo_plugin', array($this, 'admin_index'), 'dashicons-admin-generic', 110);
-    // }
+  
+  // ---------- CUSTOM ADMIN FIELDS ----------
 
-  // Require the admin page template
-  // plugin_path is defined in BaseController
-    // public function admin_index(){
-    //   require_once $this->plugin_path . 'templates/admin-index.php';
-    // }
+  // SETTINGS
+  public function setSettings(){
+    $args = [];
+
+    foreach($this->managers as $manager){
+      $args[] =
+        [
+          'option_group' => 'predator_option_group',
+          'option_name' => $manager,
+          'callback' => array($this->callbacks_manager, 'checkboxSanitize'),
+        ];
+    }
+
+    $this->settings->setSettings($args);
+  }
+
+  // SECTIONS
+  public function setSections(){
+    $args = [
+      [
+        'id' => 'predator_admin_index',
+        'title' => 'Settings Manager',
+        'callback' => array($this->callbacks_manager, 'adminSectionManager'),
+        'page' => 'predator_plugin'
+      ],
+    ];
+
+    $this->settings->setSections($args);
+  }
+
+  // FIELDS
+  public function setFields(){
+    $args = [
+      [
+        'id' => 'cpt_manager',
+        'title' => 'CPT Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'cpt_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'taxonomy_manager',
+        'title' => 'Taxonomy Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'taxonomy_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'media_manager',
+        'title' => 'Media Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'media_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'gallery_manager',
+        'title' => 'Gallery Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'gallery_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'testimonial_manager',
+        'title' => 'Testimonial Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'testimonial_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'template_manager',
+        'title' => 'Template Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'template_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'login_manager',
+        'title' => 'Ajax Login Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'login_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'membership_manager',
+        'title' => 'Membership Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'membership_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+      [
+        'id' => 'chat_manager',
+        'title' => 'Chat Manager:',
+        'callback' => array($this->callbacks_manager, 'checkboxField'),
+        'page' => 'predator_plugin',
+        'section' => 'predator_admin_index',
+        'args' => [
+          'label_for' => 'chat_manager',
+          'class' => 'ui-toggle'
+        ]
+      ],
+    ];
+
+    $this->settings->setFields($args);
+  }
 }
