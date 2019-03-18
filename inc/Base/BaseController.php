@@ -2,7 +2,6 @@
 
 namespace Inc\Base;
 
-// Extends classes to give access to root directory
 class BaseController{
 
   public $plugin_path;
@@ -16,16 +15,17 @@ class BaseController{
     $this->plugin_url = plugin_dir_url(dirname(__FILE__, 2));
     $this->plugin_basename = plugin_basename(dirname(__FILE__, 3)) . '/predator-plugin.php';
     
+    
     $this->managers = [
-      'cpt_manager',
-      'taxonomy_manager',
-      'media_manager',
-      'gallery_manager',
-      'testimonial_manager',
-      'template_manager',
-      'login_manager',
-      'membership_manager',
-      'chat_manager',
+      'cpt_manager' => 'CPT Manager:',
+      'taxonomy_manager' => 'Taxonomy Manager:',
+      'widget_manager' => 'Media Widget Manager:',
+      'gallery_manager' => 'Gallery Manager:',
+      'testimonial_manager' => 'Testimonial Manager:',
+      'template_manager' => 'Template Manager:',
+      'auth_manager' => 'Ajax Login Manager:',
+      'membership_manager' => 'Membership Manager:',
+      'chat_manager' => 'Chat Manager:',
     ];
   }
 }

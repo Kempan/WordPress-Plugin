@@ -2,7 +2,7 @@
 
 namespace Inc\Base;
 
-use \Inc\Base\BaseController;
+use Inc\Base\BaseController;
 
 class Enqueue extends BaseController{
 

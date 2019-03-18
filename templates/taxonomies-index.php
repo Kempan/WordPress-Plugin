@@ -1,1 +1,1 @@
-<h1>Taxonomies</h1>
+<h1>Taxonomies Manager</h1>

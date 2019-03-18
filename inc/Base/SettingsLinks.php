@@ -2,8 +2,9 @@
 
 namespace Inc\Base;
 
-use \Inc\Base\BaseController;
+use Inc\Base\BaseController;
 
+// This class creates the settings link on the plugin form
 class SettingsLinks extends BaseController{
 
   // Activates settings link from settings_link()

@@ -7,9 +7,18 @@ final class Init{
   // Returns all classes stored in array
   public static function get_services(){
     return [
-      Pages\Admin::class,
       Base\Enqueue::class,
-      Base\SettingsLinks::class
+      Pages\Dashboard::class,
+      Base\SettingsLinks::class,
+      Base\ChatController::class,
+      Base\AuthController::class,
+      Base\GalleryController::class,
+      Base\TaxonomyController::class,
+      Base\TemplateController::class,
+      Base\MembershipController::class,
+      Base\MediaWidgetController::class,
+      Base\TestimonialController::class,
+      Base\CustomPostTypeController::class,
     ];
   }
 
