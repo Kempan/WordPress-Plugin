@@ -100,7 +100,7 @@ class Dashboard extends BaseController{
       [
         'id' => 'predator_admin_index',
         'title' => 'Settings Manager',
-        'callback' => array($this->callbacks_manager, 'adminSectionManager'),
+        'callback' => array($this->callbacks_manager, 'adminSection'),
         'page' => 'predator_plugin'
       ],
     ];

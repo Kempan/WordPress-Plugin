@@ -17,7 +17,7 @@ class ManagerCallbacks extends BaseController{
 
   }
 
-  public function adminSectionManager(){
+  public function adminSection(){
     echo 'Activate / Deactivate the Sections and Features of this Predator-Plugin!';
   }
 
