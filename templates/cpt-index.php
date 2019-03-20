@@ -71,8 +71,69 @@
     </div>
 
     <div id="tab-3" class="tab-pane">
-      <h3>Export</h3>
-    </div>
+      
+      <?php
+      foreach($values as $value ){ ?>
 
+        <h3>Custom Post Type: <?php echo $value['singular_name']; ?></h3>
+        <pre class="prettyprint">
+          // Register Custom Post Type
+          function custom_post_type() {
+
+            $args = array(
+              'post_type'             => '<?php echo $value['post_type'] ?>',
+              'name'                  => '<?php echo $value['plural_name'] ?>',
+              'singular_name'         => '<?php echo $value['singular_name'] ?>',
+              'menu_name'             => '<?php echo $value['plural_name'] ?>',
+              'name_admin_bar'        => '<?php echo $value['singular_name'] ?>',
+              'archives'              => '<?php echo $value['singular_name'] ?> Archives',
+              'attributes'            => '<?php echo $value['singular_name'] ?> Attributes',
+              'parent_item_colon'     => 'Parent <?php echo $value['singular_name'] ?>',
+              'all_items'             => 'All <?php echo $value['singular_name'] ?>',
+              'add_new_item'          => 'Add New <?php echo $value['singular_name'] ?>',
+              'add_new'               => 'Add New',
+              'new_item'              => 'New <?php echo $value['singular_name'] ?>',
+              'edit_item'             => 'Edit <?php echo $value['singular_name'] ?>',
+              'update_item'           => 'Update <?php echo $value['singular_name'] ?>',
+              'view_item'             => 'View <?php echo $value['singular_name'] ?>',
+              'view_items'            => 'View <?php echo $value['plural_name'] ?>',
+              'search_items'          => 'Search <?php echo $value['plural_name'] ?>',
+              'not_found'             => 'No <?php echo $value['singular_name'] ?> Found',
+              'not_found_in_trash'    => 'No <?php echo $value['singular_name'] ?> Found in Trash',
+              'featured_image'        => 'Featured Image',
+              'set_featured_image'    => 'Set Featured Image',
+              'remove_featured_image' => 'Remove Featured Image',
+              'use_featured_image'    => 'Use Featured Image',
+              'insert_into_item'      => 'Insert into <?php echo $value['singular_name'] ?>',
+              'uploaded_to_this_item' => 'Upload to this <?php echo $value['singular_name'] ?>',
+              'items_list'            => <?php echo $value['plural_name'] ?> List',
+              'items_list_navigation' => <?php echo $value['plural_name'] ?> List Navigation',
+              'filter_items_list'     => 'Filter <?php echo $value['plural_name'] ?> List',
+              'label'                 => <?php echo $value['singular_name'] ?>',
+              'description'           => <?php echo $value['plural_name'] ?> Custom Post Types',
+              'supports'              => false,
+              'taxonomies'            => array('category', 'post_tag'),
+              'hierarchical'          => false,
+              'public'                => <?php echo isset($value['public']) ? 'true' : 'false' ?>,
+              'show_ui'               => true,
+              'show_in_menu'          => true,
+              'show_in_admin_bar'     => true,
+              'show_in_nav_menus'     => true,
+              'can_export'            => true,
+              'has_archive'           => <?php echo isset($value['has_archive']) ? 'true' : 'false' ?>,
+              'exclude_from_search'   => false,
+              'publicly_queryable'    => true,
+              'capability_type'       => 'post'
+            );
+            
+            register_post_type( '<?php echo $value['post_type']; ?>' );
+
+          }
+          add_action( 'init', 'custom_post_type', 0 );
+        </pre>
+        <?php
+      } 
+      ?>
+    </div>
   </div>
 </div>
