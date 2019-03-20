@@ -158,9 +158,7 @@ class CustomPostTypeController extends BaseController{
 
   public function storeCustomPostTypes(){
 
-    if( ! get_option('predator_plugin_cpt')) return;
-
-    $values = get_option('predator_plugin_cpt');
+    $values = get_option('predator_plugin_cpt') ?: array();
 
     foreach($values as $value ){
       $this->cpt[] = [
