@@ -2,19 +2,15 @@
 
 namespace Inc\Api\Callbacks;
 
-class CptCallbacks{
+class TaxonomyCallbacks{
 
-  public function cptSection(){
-    echo 'Create Your Own Custom Post Types';
+  public function taxSection(){
+    echo 'Create Your Own Taxonomies';
   }
 
-  // sanitize your input if needed
-  public function cptSanitize($input){
+  public function taxSanitize($input){
 
-    // var_dump($_POST['remove']);
-    // die();
-    
-    $output = get_option('predator_plugin_cpt');
+    $output = get_option('predator_plugin_tax');
     
     // delete your custom post type
     if(isset($_POST['remove'])){
@@ -22,19 +18,19 @@ class CptCallbacks{
       return $output;
     }
 
-    // if predator_plugin_cpt is empty, like when you activate the plugin
-    // for the first time, just fill the output with the input
+    // if the array is empty fill it with the input
     if(count($output) == 0){
-      $output[$input['post_type']] = $input;
+      $output[$input['taxonomy']] = $input;
       return $output;
     }
     
-    //check to make sure we dont add the same post type
+    // make sure we dont add the same id, if we do just update
+    // with the new input
     foreach($output as $key => $value){
-      if($input['post_type'] === $key){
+      if($input['taxonomy'] === $key){
         $output[$key] = $input;
       } else {
-        $output[$input['post_type']] = $input;
+        $output[$input['taxonomy']] = $input;
       }
     }
 
@@ -47,9 +43,9 @@ class CptCallbacks{
     $option_name = $args['option_name'];
     $value = '';
 
-    if(isset($_POST['edit_post'])){
+    if(isset($_POST['edit_taxonomy'])){
       $input = get_option($option_name);
-      $value = $input[$_POST['edit_post']][$name];
+      $value = $input[$_POST['edit_taxonomy']][$name];
     }
 
     echo '<input type="text" class="regular-text" id="'.$name.'" name="'.$option_name.'['.$name.']" value="'.$value.'" placeholder="'.$args['placeholder'].'" required>';
@@ -62,13 +58,12 @@ class CptCallbacks{
     $option_name = $args['option_name'];
     $checked = false;
 
-    if(isset($_POST['edit_post'])){
+    if(isset($_POST['edit_taxonomy'])){
       $checkbox = get_option($option_name);
-      $checked = isset($checkbox[$_POST['edit_post']][$name]) ?: false;
+      $checked = isset($checkbox[$_POST['edit_taxonomy']][$name]) ?: false;
     }
     
     echo '<div class="'.$class.'"><input type="checkbox" class="'.$class.'" id="'.$name.'" name="'.$option_name.'['.$name.']" 
     value="1" class="" '.($checked ? 'checked' : '').'><label for="'.$name.'"><div></div></label></div>';
   }
- 
 }

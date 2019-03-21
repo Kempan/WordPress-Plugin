@@ -18,7 +18,7 @@ class ManagerCallbacks extends BaseController{
   }
 
   public function adminSection(){
-    echo 'Activate / Deactivate the Sections and Features of this Predator-Plugin!';
+    echo 'Activate / Deactivate The Features of This Predator-Plugin';
   }
 
   public function checkboxField($args){

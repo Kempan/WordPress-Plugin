@@ -19,5 +19,10 @@ class Activate{
     if( ! get_option('predator_plugin_cpt')){
       update_option('predator_plugin_cpt', $default);
     }
+
+    // Check if the cpt options has been set
+    if( ! get_option('predator_plugin_tax')){
+      update_option('predator_plugin_tax', $default);
+    }
   }
 }

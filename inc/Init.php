@@ -14,11 +14,11 @@ final class Init{
       Base\AuthController::class,
       Base\GalleryController::class,
       Base\TaxonomyController::class,
+      Base\PostTypeController::class,
       Base\TemplateController::class,
       Base\MembershipController::class,
       Base\MediaWidgetController::class,
       Base\TestimonialController::class,
-      Base\CustomPostTypeController::class,
     ];
   }
 

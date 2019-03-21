@@ -7,7 +7,7 @@ use Inc\Base\BaseController;
 use Inc\Api\Callbacks\CptCallbacks;
 use Inc\Api\Callbacks\AdminCallbacks;
 
-class CustomPostTypeController extends BaseController{
+class PostTypeController extends BaseController{
 
   public $settings;
   public $callbacks;
@@ -259,6 +259,5 @@ class CustomPostTypeController extends BaseController{
         'capability_type'           => $post_type['capability_type'],
       ]);
     }
-    
   }
 }
