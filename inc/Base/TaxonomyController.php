@@ -158,14 +158,13 @@ class TaxonomyController extends BaseController{
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'genre' ),
+        'rewrite'           => array( 'slug' => $value['taxonomy'] ),
       ];
 
     }
   }
   
   public function registerTaxonomies(){
-    var_dump($this->taxonomies);
     foreach($this->taxonomies as $taxonomy){
       register_taxonomy($taxonomy['rewrite']['slug'], array('post'), $taxonomy);
     }
