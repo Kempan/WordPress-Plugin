@@ -2,7 +2,7 @@
 
 This is a multi purpose plugin that Im developing for fun and experiance.
 
-It will contain the following features
+Current features
 
 Custom Post Type Manager<br>
 Taxonomy Manager<br>
